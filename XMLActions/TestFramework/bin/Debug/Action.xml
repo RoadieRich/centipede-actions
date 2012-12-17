@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Action</name>
+    </assembly>
+    <members>
+        <member name="T:Centipede.BranchAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.Action">
+            <summary>
+            Base Action class: all actions will subclass this
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.#ctor(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="variables"></param>
+        </member>
+        <member name="F:Centipede.Action.Variables">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Action.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Action.Comment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Action.Tag">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Action.Next">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.InitAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.DoAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.CleanupAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.Run">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.GetNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Centipede.Action.ParseStringForVariable(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Centipede.Action.TrueValues">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Action.AddToXmlElement(System.Xml.XmlElement)">
+            <summary>
+            
+            </summary>
+            <param name="rootElement"></param>
+        </member>
+        <member name="M:Centipede.Action.FromXml(System.Xml.XmlElement,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            
+            </summary>
+            <param name="element"></param>
+            <param name="variables"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Centipede.Action.Complexity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.Action.Setter">
+            <summary>
+            
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:Centipede.BranchAction.#ctor(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},Centipede.BranchCondition)">
+            <summary>
+            Basic branch action - has two possible "next" actions, 
+            which are chosen according to condition.
+            </summary>
+            <param name="name"></param>
+            <param name="variables"></param>
+            <param name="condition"></param>
+        </member>
+        <member name="F:Centipede.BranchAction.Condition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.BranchAction.NextIfFalse">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.BranchAction.DoAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.BranchAction.GetNext">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Centipede.BranchCondition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.BranchCondition.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.BranchCondition.Test(Centipede.Action)">
+            <summary>
+            
+            </summary>
+            <param name="act"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Centipede.Actions.ActionDisplayControl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.ActionDisplayControl.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Centipede.Actions.ActionDisplayControl.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Centipede.Actions.ActionDisplayControl.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:Centipede.Actions.ActionDisplayControl.#ctor(Centipede.Action)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="F:Centipede.Actions.ActionDisplayControl.ThisAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Centipede.Actions.ActionDisplayControl.StatusMessage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Centipede.Actions.ActionDisplayControl.BackColor">
+            
+             <summary>
+             Gets or sets the background color for the control.
+             </summary>
+             <value>
+             A System.Drawing.Color that represents the background color of the control.
+             The default is the value of the System.Windows.Forms.Control.DefaultBackColor
+             property.
+             </value>
+        </member>
+        <member name="P:Centipede.Actions.ActionDisplayControl.Selected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Centipede.Actions.ActionDisplayControl.State">
+            <summary>
+            Sets the displayed state of the action.
+            <see cref="T:Centipede.Actions.ActionState"/>
+            </summary>
+        </member>
+        <member name="E:Centipede.Actions.ActionDisplayControl.Deleted">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.Actions.ActionDisplayControl.DeletedEventHandler">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Centipede.StringInject.StringInjectExtension">
+            <summary>
+            From http://mo.notono.us/2008/07/c-stringinject-format-strings-by-key.html
+            </summary>
+        </member>
+        <member name="M:Centipede.StringInject.StringInjectExtension.Inject(System.String,System.Object)">
+            <summary>
+            Extension method that replaces keys in a string with the values of matching object properties.
+            <remarks>Uses <see cref="M:System.String.Format(System.String,System.Object)"/> internally; custom formats should match those used for that method.</remarks>
+            </summary>
+            <param name="formatString">The format string, containing keys like {foo} and {foo:SomeFormat}.</param>
+            <param name="injectionObject">The object whose properties should be injected in the string</param>
+            <returns>A version of the formatString string with keys replaced by (formatted) key values.</returns>
+        </member>
+        <member name="M:Centipede.StringInject.StringInjectExtension.Inject(System.String,System.Collections.IDictionary)">
+            <summary>
+            Extension method that replaces keys in a string with the values of matching dictionary entries.
+            <remarks>Uses <see cref="M:System.String.Format(System.String,System.Object)"/> internally; custom formats should match those used for that method.</remarks>
+            </summary>
+            <param name="formatString">The format string, containing keys like {foo} and {foo:SomeFormat}.</param>
+            <param name="dictionary">An <see cref="T:System.Collections.IDictionary"/> with keys and values to inject into the string</param>
+            <returns>A version of the formatString string with dictionary keys replaced by (formatted) key values.</returns>
+        </member>
+        <member name="M:Centipede.StringInject.StringInjectExtension.Inject(System.String,System.Collections.Hashtable)">
+            <summary>
+            Extension method that replaces keys in a string with the values of matching hashtable entries.
+            <remarks>Uses <see cref="M:System.String.Format(System.String,System.Object)"/> internally; custom formats should match those used for that method.</remarks>
+            </summary>
+            <param name="formatString">The format string, containing keys like {foo} and {foo:SomeFormat}.</param>
+            <param name="attributes">A <see cref="T:System.Collections.Hashtable"/> with keys and values to inject into the string</param>
+            <returns>A version of the formatString string with hastable keys replaced by (formatted) key values.</returns>
+        </member>
+        <member name="M:Centipede.StringInject.StringInjectExtension.InjectSingleValue(System.String,System.String,System.Object)">
+            <summary>
+            Replaces all instances of a 'key' (e.g. {foo} or {foo:SomeFormat}) in a string with an optionally formatted value, and returns the result.
+            </summary>
+            <param name="formatString">The string containing the key; unformatted ({foo}), or formatted ({foo:SomeFormat})</param>
+            <param name="key">The key name (foo)</param>
+            <param name="replacementValue">The replacement value; if null is replaced with an empty string</param>
+            <returns>The input string with any instances of the key replaced with the replacement value</returns>
+        </member>
+        <member name="M:Centipede.StringInject.StringInjectExtension.GetPropertyHash(System.Object)">
+            <summary>
+            Creates a HashTable based on current object state.
+            <remarks>Copied from the MVCToolkit HtmlExtensionUtility class</remarks>
+            </summary>
+            <param name="properties">The object from which to get the properties</param>
+            <returns>A <see cref="T:System.Collections.Hashtable"/> containing the object instance's property names and their values</returns>
+        </member>
+        <member name="T:Centipede.Actions.ActionState">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.ActionState.None">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.ActionState.Running">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.ActionState.Completed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.ActionState.Error">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.Actions.CentipedeEventArgs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.Actions.CentipedeEventArgs.#ctor(System.Type,System.Collections.Generic.List{Centipede.Action},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            
+            </summary>
+            <param name="program"></param>
+            <param name="actions"></param>
+            <param name="variables"></param>
+        </member>
+        <member name="F:Centipede.Actions.CentipedeEventArgs.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.CentipedeEventArgs.Actions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.Actions.CentipedeEventArgs.Variables">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.ActionArgumentAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionArgumentAttribute.displayName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionArgumentAttribute.usage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionArgumentAttribute.setterMethodName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionArgumentAttribute.setterMethod">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.ActionArgumentAttribute.ArgumentSetter">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Centipede.ActionCategoryAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.ActionCategoryAttribute.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="category"></param>
+        </member>
+        <member name="F:Centipede.ActionCategoryAttribute.category">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionCategoryAttribute.helpText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionCategoryAttribute.displayName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionCategoryAttribute.displayControl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Centipede.ActionCategoryAttribute.iconName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.ActionException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.ActionException.#ctor(System.String,Centipede.Action)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:Centipede.ActionException.#ctor(Centipede.Action)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Centipede.ActionException.#ctor(System.String,System.Exception,Centipede.Action)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="exception"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:Centipede.ActionException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Centipede.ActionException.#ctor(System.Exception,Centipede.Action)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+            <param name="action"></param>
+        </member>
+        <member name="F:Centipede.ActionException.ErrorAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Centipede.ValidationException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.ValidationException.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Centipede.ValidationException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Centipede.ValidationException.#ctor(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="inner"></param>
+        </member>
+        <member name="M:Centipede.ValidationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+    </members>
+</doc>

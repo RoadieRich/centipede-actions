@@ -1,0 +1,10 @@
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\bin\Debug\OfficeActions.dll
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\bin\Debug\OfficeActions.pdb
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\obj\Debug\OfficeActions.Properties.Resources.resources
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\obj\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\obj\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\obj\Debug\OfficeActions.dll
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\OfficeActions\OfficeActions\obj\Debug\OfficeActions.pdb
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\Centipede\bin\Debug\Plugins\OfficeActions.dll
+C:\Documents and Settings\RLovely\My Documents\Visual Studio 2010\Projects\Centipede\bin\Debug\Plugins\OfficeActions.pdb
