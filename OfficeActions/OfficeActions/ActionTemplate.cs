@@ -25,15 +25,29 @@ namespace Centipede.OfficeActions
             : base(name, variables)
         { }
 
-        protected Excel.Workbook WorkBook;
+        protected Excel.Workbook WorkBook = null;
 
         [ActionArgument]
-        String WorksheetVarName = "Worksheet";
+        public String WorksheetVarName = "Worksheet";
 
-        protected Excel.Application ExcelApp;
+        protected static Excel.Application ExcelApp = null;
+        private Object _lockObject = new Object();
 
         protected override void InitAction()
         {
+            if (ExcelApp == null)
+            {
+                lock (_lockObject)
+                {
+                    if (ExcelApp == null)
+                    {
+                        ExcelApp = new Excel.Application();
+                    }
+                    
+                }
+                
+            }
+
             try
             {
                 WorkBook = Variables[ParseStringForVariable(WorksheetVarName)] as Microsoft.Office.Interop.Excel.Workbook;
@@ -43,12 +57,29 @@ namespace Centipede.OfficeActions
                 WorkBook = null;
                 Variables[ParseStringForVariable(WorksheetVarName)] = null;
             }
-            ExcelApp = ExcelApp.Application;
+            //ExcelApp = Excel.ApplicationClass
+            
+            
             
         }
         protected override void CleanupAction()
         {
             Variables[ParseStringForVariable(WorksheetVarName)] = WorkBook;
+        }
+
+        public override void Dispose()
+        {
+            if (WorkBook != null)
+            {
+                try
+                {
+                    WorkBook.Close(SaveChanges: false);
+                    Variables[ParseStringForVariable(WorksheetVarName)] = null;
+                    WorkBook = null;
+                }
+                catch
+                { }
+            }
         }
     }
 
@@ -79,7 +110,7 @@ namespace Centipede.OfficeActions
         { }
 
         [ActionArgument]
-        public Int32 SheetNumber = 0;
+        public Int32 SheetNumber = 1;
 
         [ActionArgument]
         public String Address = "A1";
@@ -90,7 +121,7 @@ namespace Centipede.OfficeActions
             Variables[ParseStringForVariable(ResultVarName)] = sheet.get_Range(Address).Value2;
         }
         [ActionArgument]
-        public String ResultVarName;
+        public String ResultVarName = "CellValue";
     }
 
     [ActionCategory("Office", iconName="excel", displayName="Set Cell Value")]
@@ -101,7 +132,7 @@ namespace Centipede.OfficeActions
         { }
 
         [ActionArgument]
-        public Int32 SheetNumber = 0;
+        public Int32 SheetNumber = 1;
 
         [ActionArgument]
         public String Address = "A1";
@@ -147,7 +178,7 @@ namespace Centipede.OfficeActions
     public class ShowWorksheet : ExcelAction
     {
 
-        ShowWorksheet(Dictionary<String, Object> v)
+        public ShowWorksheet(Dictionary<String, Object> v)
             : base("Show workbook", v)
         { }
 
