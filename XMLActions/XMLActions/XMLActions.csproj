@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Centipede\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>..\..\..\Centipede\bin\Debug\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Action">
-      <HintPath>..\..\Centipede\bin\Debug\Action.dll</HintPath>
+      <HintPath>..\..\..\Centipede\bin\Debug\Action.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

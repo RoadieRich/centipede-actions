@@ -7,10 +7,11 @@ using System.Xml;
 using System.Xml.XPath;
 using Centipede;
 
+
 namespace Centipede.XMLActions
 {
     
-    public abstract class XmlAction : Action
+    public abstract class XmlAction : Centipede.Action
     {
         protected XmlAction(String name, Dictionary<String, Object> variables)
             : base(name, variables)
@@ -50,8 +51,16 @@ namespace Centipede.XMLActions
         protected override void DoAction()
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(ParseStringForVariable(Filename));
-            Variables[ParseStringForVariable(XmlFileVar)] = doc.CreateNavigator();
+            try
+            {
+                doc.Load(ParseStringForVariable(Filename));
+            }
+            catch (IOException e)
+            {
+                
+                throw new ActionException("File not found.",  e, this);
+            }
+            XmlNav = doc.CreateNavigator();
         }
     }
 
@@ -70,6 +79,11 @@ namespace Centipede.XMLActions
 
         protected override void DoAction()
         {
+            if (XmlNav == null)
+            {
+                throw new ActionException("XML file not opened, or incorrect variable name", this);
+            }
+
             String xPath = String.Format("number({0})", ParseStringForVariable(XPath));
             Variables[ParseStringForVariable(ResultVar)] = (Double)XmlNav.Evaluate(xPath);
         }
@@ -89,6 +103,11 @@ namespace Centipede.XMLActions
 
         protected override void DoAction()
         {
+            if (XmlNav == null)
+            {
+                throw new ActionException("XML file not opened, or incorrect variable name", this);
+            }
+
             String xPath = String.Format("string({0})", ParseStringForVariable(XPath));
             Variables[ParseStringForVariable(ResultVar)] = XmlNav.Evaluate(xPath) as String;
         }
@@ -106,12 +125,22 @@ namespace Centipede.XMLActions
         public String XPath = "";
 
         [ActionArgument(displayName = "Variable to save result")]
-        String ResultVar = "XPathMatchCount";
+        public String ResultVar = "XPathMatchCount";
 
         protected override void DoAction()
         {
+            if (XmlNav == null)
+            {
+                throw new ActionException("XML file not opened, or incorrect variable name", this);
+            }
+
             String xPath = String.Format("number(count({0}))", ParseStringForVariable(XPath));
-            Variables[ParseStringForVariable(ResultVar)] = (Int32)XmlNav.Evaluate(xPath);
+            var result = XmlNav.Evaluate(xPath);
+
+            String parsedResultVar = ParseStringForVariable(ResultVar);
+
+            Variables[parsedResultVar] = result;
+            
         }
     }
 }
