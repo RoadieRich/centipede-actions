@@ -14,11 +14,15 @@ namespace Centipede.SolidworksActions
             : base(name, variables)
         { }
 
+        
+        [ActionArgument(displayName="SolidWorks Document Variable")]
+        public String SolidWorksDocVar = "SldWrksDoc";
+
         protected SldWorks.ModelDoc2 SolidWorksDoc = null;
 
-        private SldWorks.SldWorks SolidWorks = null;
+        protected SldWorks.SldWorks SolidWorks = null;
 
-        private static readonly String _SwAppVar = "_SolidWorksApp";
+        protected static readonly String _SwAppVar = "_SolidWorksApp";
 
         protected override void InitAction()
         {
@@ -32,11 +36,16 @@ namespace Centipede.SolidworksActions
                 SolidWorks = obj as SldWorks.SldWorks;
             }
 
+            obj = null;
+            Variables.TryGetValue( SolidWorksDocVar, out obj);
+            SolidWorksDoc = obj as ModelDoc2;
+
         }
 
         protected override void CleanupAction()
         {
             Variables[_SwAppVar] = SolidWorks;
+            Variables[SolidWorksDocVar] = SolidWorksDoc;
         }
                 
         public override int Complexity
@@ -47,17 +56,24 @@ namespace Centipede.SolidworksActions
             }
         }
 
-        protected override void Dispose()
+        public override void Dispose()
         {
             if (SolidWorks != null)
             {
                 try
                 {
+                    SolidWorksDoc.Close();
                     SolidWorks.ExitApp();
-                    SolidWorks = null;
                 }
                 catch
-                { }
+                { 
+                    //Throwing exceptions from dispose is bad and wrong.
+                }
+                finally
+                {
+                    SolidWorksDoc = null;
+                    SolidWorks = null;
+                }
             }
             base.Dispose();
         }
@@ -70,9 +86,43 @@ namespace Centipede.SolidworksActions
             : base("Open SolidWorks File", v)
         { }
 
+
+        [ActionArgument]
+        public String Filename = "";
+    
         protected override void DoAction()
         {
- 	        throw new NotImplementedException();
+            Int32 errorCode = 0, warnings = 0;
+            swFileLoadError_e errors;
+
+            swDocumentTypes_e docType;
+            switch (System.IO.Path.GetExtension(Filename).ToUpper())
+            {
+                case ".SLDPRT":
+                    docType = swDocumentTypes_e.swDocPART;
+                    break;
+                case ".SLDASM":
+                    docType = swDocumentTypes_e.swDocASSEMBLY;
+                    break;
+                case ".SLDDRW":
+                    docType = swDocumentTypes_e.swDocDRAWING;
+                    break;
+                default:
+                    throw new ActionException(String.Format("Unknown document type: {0} (must be *.SLDPRT, *.SLDASM or *.SLDDRW)", Filename), this);
+            }
+
+            SolidWorksDoc = SolidWorks.OpenDoc6(Filename, (int)docType, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errorCode, ref warnings);
+
+            errors = (swFileLoadError_e)errorCode;
+
+            if (errors != 0)
+            {
+                Object _null = null;
+                object messages;
+                SolidWorks.GetErrorMessages(out messages, out _null, out _null);
+                String errorType = ((swFileLoadError_e) errors).ToString();
+                throw new ActionException(String.Format("Error messages: {0}", String.Join("\n", messages as String[])), this);
+            }
         }
     }
 
