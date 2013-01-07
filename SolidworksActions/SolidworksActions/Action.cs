@@ -5,6 +5,8 @@ using System.Text;
 using Centipede;
 using SldWorks;
 using SwConst;
+using SolidworksActions;
+using System.IO;
 
 namespace Centipede.SolidworksActions
 {   
@@ -20,23 +22,14 @@ namespace Centipede.SolidworksActions
 
         protected SldWorks.ModelDoc2 SolidWorksDoc = null;
 
-        protected SldWorks.SldWorks SolidWorks = null;
-
-        protected static readonly String _SwAppVar = "_SolidWorksApp";
+        protected SolidWorksWrapper SolidWorks = null;
 
         protected override void InitAction()
         {
-            Object obj;
-            if (!Variables.TryGetValue(_SwAppVar, out obj))
-            {           
-                SolidWorks = new SldWorks.SldWorks();
-            }
-            else
-            {
-                SolidWorks = obj as SldWorks.SldWorks;
-            }
+            
+            SolidWorks = SolidWorksWrapper.Instance;
 
-            obj = null;
+            Object obj = null;
             Variables.TryGetValue( SolidWorksDocVar, out obj);
             SolidWorksDoc = obj as ModelDoc2;
 
@@ -44,7 +37,6 @@ namespace Centipede.SolidworksActions
 
         protected override void CleanupAction()
         {
-            Variables[_SwAppVar] = SolidWorks;
             Variables[SolidWorksDocVar] = SolidWorksDoc;
         }
                 
@@ -63,7 +55,7 @@ namespace Centipede.SolidworksActions
                 try
                 {
                     SolidWorksDoc.Close();
-                    SolidWorks.ExitApp();
+                    (SolidWorks as IDisposable).Dispose();
                 }
                 catch
                 { 
@@ -72,11 +64,49 @@ namespace Centipede.SolidworksActions
                 finally
                 {
                     SolidWorksDoc = null;
-                    SolidWorks = null;
                 }
             }
             base.Dispose();
         }
+
+        protected String SelectFeature(String featureName, String instanceId, String itemType)
+        {
+            
+            String processedName = "";
+            if (itemType != "COMPONENT")
+            {
+
+                if ((SolidWorksWrapper.FileType)SolidWorksDoc.GetType() != SolidWorksWrapper.FileType.Assembly)
+                {
+                    throw new SolidWorksActionException("Cannot set component config because current document is not an assembly.", this);
+                }
+
+                if (instanceId != null && instanceId != "")
+                {
+                    featureName = String.Format("{0}-{1}", featureName, instanceId);
+                }
+                
+                String temp = (from Component2 component in (SolidWorksDoc as AssemblyDoc).GetComponents(true) as IEnumerable<Component2>
+                        where component.Name.ToUpper() == featureName.ToUpper()
+                        select component.Name).First();
+
+                processedName = String.Format("{0}@{1}", temp, Path.GetFileNameWithoutExtension(SolidWorksDoc.GetPathName()));
+            }
+            else
+            {
+                processedName = (from Feature feature in SolidWorksDoc.FeatureManager.GetFeatures(true) as IEnumerable<Feature>
+                                 where feature.Name.ToUpper() == featureName.ToUpper()
+                                 select feature.Name).First();
+            }
+            
+            if (!SolidWorksDoc.Extension.SelectByID(processedName, itemType, 0, 0, 0, false, 0, null))
+            {
+                throw new SolidWorksActionException(this);
+            }
+
+            return processedName;
+        }
+
     }
 
     [ActionCategory("SolidWorks", iconName="solidworks")]
@@ -91,37 +121,14 @@ namespace Centipede.SolidworksActions
         public String Filename = "";
     
         protected override void DoAction()
-        {
-            Int32 errorCode = 0, warnings = 0;
-            swFileLoadError_e errors;
-
-            swDocumentTypes_e docType;
-            switch (System.IO.Path.GetExtension(Filename).ToUpper())
+        {   
+            try
             {
-                case ".SLDPRT":
-                    docType = swDocumentTypes_e.swDocPART;
-                    break;
-                case ".SLDASM":
-                    docType = swDocumentTypes_e.swDocASSEMBLY;
-                    break;
-                case ".SLDDRW":
-                    docType = swDocumentTypes_e.swDocDRAWING;
-                    break;
-                default:
-                    throw new ActionException(String.Format("Unknown document type: {0} (must be *.SLDPRT, *.SLDASM or *.SLDDRW)", Filename), this);
+                SolidWorksDoc = SolidWorks.OpenFile(Filename);
             }
-
-            SolidWorksDoc = SolidWorks.OpenDoc6(Filename, (int)docType, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errorCode, ref warnings);
-
-            errors = (swFileLoadError_e)errorCode;
-
-            if (errors != 0)
+            catch (SolidWorksException e)
             {
-                Object _null = null;
-                object messages;
-                SolidWorks.GetErrorMessages(out messages, out _null, out _null);
-                String errorType = ((swFileLoadError_e) errors).ToString();
-                throw new ActionException(String.Format("Error messages: {0}", String.Join("\n", messages as String[])), this);
+                throw new SolidWorksActionException(e, this);
             }
         }
     }
@@ -132,10 +139,14 @@ namespace Centipede.SolidworksActions
         public ActivateSolidWorksDoc(Dictionary<String, Object> v)
             : base("Activate SolidWorks Document", v)
         { }
+                
+        [ActionArgument(displayName="Document Name")]
+        public String DocName = "";
+    
 
         protected override void DoAction()
         {
-            throw new NotImplementedException();
+            SolidWorksDoc = SolidWorks.ActivateDoc(DocName);
         }
     }
 
@@ -147,9 +158,18 @@ namespace Centipede.SolidworksActions
             : base("Insert Design Table", v)
         { }
 
+
+        [ActionArgument(displayName = "Design Table Filename")]
+        public String Filename = "";
+
+
         protected override void DoAction()
         {
-            throw new NotImplementedException();
+            if (!SolidWorksDoc.InsertFamilyTableOpen(Filename))
+            {
+                throw new SolidWorksActionException(this);
+            }
+            
         }
     }
 
@@ -160,9 +180,21 @@ namespace Centipede.SolidworksActions
             : base("Set Active Config", v)
         { }
 
+
+        [ActionArgument(displayName = "Configuration name")]
+        public String ConfigName = "";
+
         protected override void DoAction()
         {
-            throw new NotImplementedException();
+            if ((SolidWorksDoc.GetActiveConfiguration() as Configuration).Name != ConfigName)
+            {
+                if (!SolidWorksDoc.ShowConfiguration2(ConfigName))
+                {
+                    throw new SolidWorksActionException(this);
+                }
+            }
+                
+
         }
     }
 
@@ -173,9 +205,24 @@ namespace Centipede.SolidworksActions
             : base("Set Component Config", v)
         { }
 
+
+        [ActionArgument(displayName = "Component Name")]
+        public String ComponentName = "";
+                
+        [ActionArgument(displayName = "Instance ID")]
+        public String InstanceID = "";
+
+        [ActionArgument(displayName = "Configuration Name")]
+        public String ConfigName = "";
+
+
         protected override void DoAction()
         {
-            throw new NotImplementedException();
+            if ((SolidWorksWrapper.FileType)SolidWorksDoc.GetType() != SolidWorksWrapper.FileType.Assembly)
+            {
+                throw new SolidWorksActionException("Cannot set component config because current document is not an assembly.", this);
+            }
+
         }
     }
 
@@ -188,7 +235,7 @@ namespace Centipede.SolidworksActions
 
         protected override void DoAction()
         {
-            throw new NotImplementedException();
+            
         }
     }
 
@@ -321,6 +368,23 @@ namespace Centipede.SolidworksActions
         {
             throw new NotImplementedException();
         }
+    }
+
+    [Serializable]
+    public class SolidWorksActionException : ActionException
+    {
+        public SolidWorksActionException(Action action)
+            : base(String.Format("Error from Solidworks:\n{0}",
+                String.Join("\n", SolidWorksWrapper.Instance.GetErrors())), action)
+        { }
+        public SolidWorksActionException(string message, Action action)
+            : base(message, action)
+        { }
+
+        public SolidWorksActionException(Exception inner, Action action)
+            : base(String.Format("Error from Solidworks:\n{0}",
+                String.Join("\n", SolidWorksWrapper.Instance.GetErrors())), inner, action)
+        { }
     }
 }
 
