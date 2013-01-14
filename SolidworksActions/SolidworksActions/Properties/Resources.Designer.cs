@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Centipede.SolidworksActions.Properties {
+namespace SolidworksActions.Properties {
     using System;
     
     

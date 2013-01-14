@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using SldWorks;
 using SwConst;
-using Centipede;
 
 namespace SolidworksActions
 {
@@ -12,27 +11,64 @@ namespace SolidworksActions
     {
         private SolidWorksWrapper()
         {
-            App = new SldWorks.SldWorks();
+            _app = new SldWorks.SldWorks();
         }
 
-        private static SldWorks.SldWorks App = null;
+        private static SldWorks.SldWorks _app;
+        public void SelectFeature(ModelDoc2 document, string featureName, string instanceId, string itemType)
+        // ReSharper restore UnusedMember.Global
+        {
+            String processedName = "";
+            if (itemType != "COMPONENT")
+            {
+                if ((FileType)document.GetType() != FileType.Assembly)
+                {
+                    throw new SolidWorksException(String.Format("Cannot select component {0} because current document is not an assembly.", featureName));
+                }
 
+                if (!string.IsNullOrEmpty(instanceId))
+                {
+                    processedName = String.Format("{0}-{1}", featureName, instanceId);
+                }
+
+                String temp = (from Component2 component in (document as AssemblyDoc).GetComponents(true) as IEnumerable<Component2>
+                               where component.Name.ToUpper() == processedName.ToUpper()
+                               select component.Name).First();
+
+                processedName = String.Format("{0}@{1}", temp, Path.GetFileNameWithoutExtension(document.GetPathName()));
+            }
+            else
+            {
+                processedName = (from Feature feature in document.FeatureManager.GetFeatures(true) as IEnumerable<Feature>
+                                 where feature.Name.ToUpper() == featureName.ToUpper()
+                                 select feature.Name).First();
+            }
+
+            if (!document.Extension.SelectByID(processedName, itemType, 0, 0, 0, false, 0, null))
+            {
+                throw new SolidWorksException(String.Format("Selected feature ({0}) does not exist.", featureName));
+            }
+
+        }
         void IDisposable.Dispose()
         {
             try
             {
-                App.CloseAllDocuments(true);
-                App = null;
+                _app.CloseAllDocuments(true);
+                _app.ExitApp();
+                _app = null;
             }
+// ReSharper disable EmptyGeneralCatchClause
             catch
             { }
+            // ReSharper restore EmptyGeneralCatchClause
         }
         
         public ModelDoc2 OpenFile(String filename)
         {
             int err = 0, warn = 0;
             
-            ModelDoc2 doc = App.OpenDoc6(filename,
+            ModelDoc2 doc = _app.OpenDoc6(filename,
                 (int)GetDocumentTypeFromFilename(filename, true),
                 (int)swOpenDocOptions_e.swOpenDocOptions_Silent,
                 "",
@@ -42,30 +78,31 @@ namespace SolidworksActions
             
             if (err != 0)
             {
-                Object messages = new Object();
-                Object msgIds = new Object(), msgTypes = new Object();
-                int count = App.GetErrorMessages(out messages, out msgIds, out msgTypes);
+                object messages, msgIds, msgTypes;
+                int count = _app.GetErrorMessages(out messages, out msgIds, out msgTypes);
 
                 String exceptionMessage = String.Format("{0} error(s) occurred opening {1}:\n{2}", count, filename, String.Join("\n", messages));
 
                 throw new SolidWorksException(exceptionMessage);
             }
             return doc;
-        } 
+        }
 
-        public enum FileType
+        private enum FileType
         {
             Assembly = swDocumentTypes_e.swDocASSEMBLY,
+// ReSharper disable UnusedMember.Local
             Drawing = swDocumentTypes_e.swDocDRAWING,
+// ReSharper restore UnusedMember.Local
             Part = swDocumentTypes_e.swDocPART,
 
             Unknown = -1
         }
 
-        public IEnumerable<String> GetErrors(out int count)
+        private IEnumerable<String> GetErrors(out int count)
         {
             Object messages, msgIds, msgTypes;
-            count = App.GetErrorMessages(out messages, out msgIds, out msgTypes);
+            count = _app.GetErrorMessages(out messages, out msgIds, out msgTypes);
 
             return messages as String[];
         }
@@ -76,14 +113,9 @@ namespace SolidworksActions
             return GetErrors(out count);
         }
 
-        public Exception GetErrorsAsException()
+        private FileType GetDocumentTypeFromFilename(String filename, Boolean throwOnUnknown=false)
         {
-            return new SolidWorksException();
-        }
-
-        public FileType GetDocumentTypeFromFilename(String filename, Boolean throwOnUnknown=false)
-        {
-            switch (System.IO.Path.GetExtension(filename).ToUpper())
+            switch (Path.GetExtension(filename).ToUpper())
             {
                 case ".SLDPRT":
                     return FileType.Part;
@@ -97,24 +129,20 @@ namespace SolidworksActions
                     {
                         throw new SolidWorksException(String.Format(@"Unknown filetype ""{0}""", filename));
                     }
-                    else
-                    {
-                        return FileType.Unknown;
-                    }
-                    
+                return FileType.Unknown;
             }
         }
 
         #region Singleton handling code
-        private static Object _lockObject = new Object();
-        private static SolidWorksWrapper _instance;
+        private static readonly Object LockObject = new Object();
+        private volatile static SolidWorksWrapper _instance;
         public static SolidWorksWrapper Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    lock (_lockObject)
+                    lock (LockObject)
                     {
                         if (_instance == null)
                         {
@@ -129,10 +157,11 @@ namespace SolidworksActions
         #endregion
 
 
-        internal ModelDoc2 ActivateDoc(string DocName)
+/*
+        internal ModelDoc2 ActivateDoc(string docName)
         {
             int errors = 0;
-            ModelDoc2 doc = App.ActivateDoc2(DocName, true, ref errors);
+            ModelDoc2 doc = _app.ActivateDoc2(docName, true, ref errors);
 
             if (errors > 0)
             {
@@ -141,17 +170,33 @@ namespace SolidworksActions
 
             return doc;
         }
+*/
+
+        public IEnumerable<ModelDoc2> GetOpenDocuments()
+        {
+            if (_app.ActiveDoc != null)
+            {
+                yield return _app.ActiveDoc;
+            }
+        }
+
+        public void Quit()
+        {
+            _app.ExitApp();
+        }
     }
 
     [Serializable]
     public class SolidWorksException : Exception
     {
+// ReSharper disable UnusedMember.Global
         public SolidWorksException()
             : base(String.Format("Error from Solidworks:\n{0}",
                 String.Join("\n", SolidWorksWrapper.Instance.GetErrors())))
         { }
         public SolidWorksException(string message) : base(message) { }
         public SolidWorksException(string message, Exception inner) : base(message, inner) { }
+// ReSharper restore UnusedMember.Global
         protected SolidWorksException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context)
