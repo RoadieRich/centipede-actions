@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Centipede;
 
 
-namespace Centipede.XMLActions
+namespace XMLActions
 {
     
     public abstract class XmlAction : Centipede.Action
@@ -40,9 +38,9 @@ namespace Centipede.XMLActions
     }
 
     [ActionCategory("XML", iconName = "xml", displayName="Open XML File")]
-    public class OpenXMLFile : XmlAction
+    public class OpenXmlFile : XmlAction
     {
-        public OpenXMLFile(Dictionary<String, Object> variables)
+        public OpenXmlFile(Dictionary<String, Object> variables)
             : base("Open XML File", variables)
         { }
 
@@ -50,7 +48,7 @@ namespace Centipede.XMLActions
         public String Filename = "";
         protected override void DoAction()
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             try
             {
                 doc.Load(ParseStringForVariable(Filename));
@@ -85,7 +83,7 @@ namespace Centipede.XMLActions
             }
 
             String xPath = String.Format("number({0})", ParseStringForVariable(XPath));
-            Variables[ParseStringForVariable(ResultVar)] = (Double)XmlNav.Evaluate(xPath);
+            Variables[ParseStringForVariable(ResultVar)] = (Double)XmlNav.Evaluate(ParseStringForVariable(xPath));
         }
     }
     [ActionCategory("XML", displayName = "Get XPath Node as String", iconName = "xml")]
