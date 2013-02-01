@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Mathcad;
 using Centipede;
+using Action = Centipede.Action;
 
-namespace Centipede.MathCadActions
+
+namespace MathCadActions
 {
     [ActionCategory("Other")]
     public class MathCadActions : Action
     {
-        public ActionTemplate(Dictionary<String, Object> variables) 
+        public MathCadActions(Dictionary<String, Object> variables) 
             : base("MathCadActions", variables)
         { }
 
         [ActionArgument(displayName="Visible Argument 1", usage="Help on the argument")]
         public String VisibleAttribute1 = "";
 
-        public override void DoAction()
+        protected override void DoAction()
         {
             throw new NotImplementedException();
         }

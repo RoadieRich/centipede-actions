@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Office.Interop;
 using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 using Centipede;
+using Action = Centipede.Action;
 
-namespace Centipede.OfficeActions
+
+namespace OfficeActions
 {
     public abstract class WordAction : Action
     {
@@ -15,7 +14,7 @@ namespace Centipede.OfficeActions
             : base(name, variables)
         { }
 
-        protected Microsoft.Office.Interop.Word.Application WordApp;
+        protected Word.Application WordApp;
 
     }
 
@@ -50,7 +49,7 @@ namespace Centipede.OfficeActions
 
             try
             {
-                WorkBook = Variables[ParseStringForVariable(WorksheetVarName)] as Microsoft.Office.Interop.Excel.Workbook;
+                WorkBook = Variables[ParseStringForVariable(WorksheetVarName)] as Excel.Workbook;
             }
             catch (KeyNotFoundException)
             {
@@ -142,11 +141,14 @@ namespace Centipede.OfficeActions
 
         protected override void DoAction()
         {
-            Excel.Worksheet sheet = WorkBook.Worksheets.get_Item(SheetNumber) as Excel.Worksheet;
+            Excel.Worksheet sheet = WorkBook.Worksheets.Item[SheetNumber] as Excel.Worksheet;
 
-            sheet.get_Range(Address).Value2 = ParseStringForVariable(Value);
+            sheet.Range[Address].Value2 = ParseStringForVariable(Value);
 
-            (sheet as Excel._Worksheet).Calculate();
+            // ReSharper disable RedundantCast - Cast is needed to avoid ambiguity between _Worksheet.Calculate and 
+            //                                   DocEvents_Event.Calculate
+            ((Excel._Worksheet)sheet).Calculate();
+            // ReSharper restore RedundantCast
         }
     }
 
