@@ -10,7 +10,7 @@ namespace OfficeActions
 {
     public abstract class WordAction : Action
     {
-        protected WordAction(String name, Dictionary<String, Object> variables)
+        protected WordAction(String name, IDictionary<string, object> variables)
             : base(name, variables)
         { }
 
@@ -20,16 +20,16 @@ namespace OfficeActions
 
     public abstract class ExcelAction : Action
     {
-        protected ExcelAction(String name, Dictionary<String, Object> variables)
+        protected ExcelAction(String name, IDictionary<string, object> variables)
             : base(name, variables)
         { }
 
-        protected Excel.Workbook WorkBook = null;
+        protected Excel.Workbook WorkBook;
 
         [ActionArgument]
         public String WorksheetVarName = "Worksheet";
 
-        protected static Excel.Application ExcelApp = null;
+        protected static volatile Excel.Application ExcelApp;
         private Object _lockObject = new Object();
 
         protected override void InitAction()
@@ -42,9 +42,7 @@ namespace OfficeActions
                     {
                         ExcelApp = new Excel.Application();
                     }
-                    
                 }
-                
             }
 
             try
@@ -68,16 +66,19 @@ namespace OfficeActions
 
         public override void Dispose()
         {
-            if (WorkBook != null)
+            if (WorkBook == null)
             {
-                try
-                {
-                    WorkBook.Close(SaveChanges: false);
-                    Variables[ParseStringForVariable(WorksheetVarName)] = null;
-                    WorkBook = null;
-                }
-                catch
-                { }
+                return;
+            }
+            try
+            {
+                WorkBook.Close(false);
+                Variables[ParseStringForVariable(WorksheetVarName)] = null;
+                WorkBook = null;
+            }
+            catch
+            {
+                Console.Out.Write("Error in dispose of {0}", Name);
             }
         }
     }
@@ -85,7 +86,7 @@ namespace OfficeActions
     [ActionCategory("Office", displayName = "Open Excel Document", iconName = "excel")]
     public class OpenExcelDocument : ExcelAction
     {
-        public OpenExcelDocument(Dictionary<String, Object> variables)
+        public OpenExcelDocument(IDictionary<string, object> variables)
             : base("Open Excel Document", variables)
         { }
 
@@ -104,7 +105,7 @@ namespace OfficeActions
     [ActionCategory("Office", iconName="excel", displayName="Get Cell Value")]
     public class GetCellValue : ExcelAction
     {
-        public GetCellValue(Dictionary<String, Object> v)
+        public GetCellValue(IDictionary<string, object> v)
             : base("Get Value From Cell", v)
         { }
 
@@ -115,9 +116,9 @@ namespace OfficeActions
         public String Address = "A1";
         protected override void DoAction()
         {
-            Excel.Worksheet sheet = WorkBook.Worksheets.get_Item(SheetNumber) as Excel.Worksheet;
+            Excel.Worksheet sheet = (Excel.Worksheet)WorkBook.Worksheets.Item[SheetNumber];
 
-            Variables[ParseStringForVariable(ResultVarName)] = sheet.get_Range(Address).Value2;
+            Variables[ParseStringForVariable(ResultVarName)] = sheet.Range[Address].Value2;
         }
         [ActionArgument]
         public String ResultVarName = "CellValue";
@@ -126,7 +127,7 @@ namespace OfficeActions
     [ActionCategory("Office", iconName="excel", displayName="Set Cell Value")]
     public class SetCellValue : ExcelAction
     {
-        public SetCellValue(Dictionary<String, Object> v)
+        public SetCellValue(IDictionary<string, object> v)
             : base("Get Value From Cell", v)
         { }
 
@@ -141,7 +142,7 @@ namespace OfficeActions
 
         protected override void DoAction()
         {
-            Excel.Worksheet sheet = WorkBook.Worksheets.Item[SheetNumber] as Excel.Worksheet;
+            Excel.Worksheet sheet = (Excel.Worksheet)WorkBook.Worksheets.Item[SheetNumber];
 
             sheet.Range[Address].Value2 = ParseStringForVariable(Value);
 
@@ -155,7 +156,7 @@ namespace OfficeActions
     [ActionCategory("Office", iconName="excel", displayName="Save Workbook")]
     public class SaveWorkbook : ExcelAction
     {
-        public SaveWorkbook(Dictionary<String, Object> v)
+        public SaveWorkbook(IDictionary<string, object> v)
             : base("Save Workbook", v)
         { }
         
@@ -163,16 +164,17 @@ namespace OfficeActions
         public String Filename = "";
 
         [ActionArgument]
-        public Boolean KeepOpen = false;
+        public Boolean KeepOpen;
 
         protected override void DoAction()
         {
             WorkBook.SaveAs(Filename);
-            if (!KeepOpen)
+            if (KeepOpen)
             {
-                WorkBook.Close();
-                WorkBook = null;
+                return;
             }
+            WorkBook.Close();
+            WorkBook = null;
         }
     }
 
@@ -180,14 +182,18 @@ namespace OfficeActions
     public class ShowWorksheet : ExcelAction
     {
 
-        public ShowWorksheet(Dictionary<String, Object> v)
+        public ShowWorksheet(IDictionary<string, object> v)
             : base("Show workbook", v)
         { }
 
         protected override void DoAction()
         {
             WorkBook.Application.Visible = true;
+            // ReSharper disable RedundantCast - needed to solve ambiguity between Excel._Workbook.Activate() and 
+            //                                   Excel.WorkbookEvents_Event.Activate.
+            
             (WorkBook as Excel._Workbook).Activate();
+            // ReSharper restore RedundantCast
         }
     }
 }

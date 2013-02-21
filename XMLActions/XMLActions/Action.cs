@@ -11,7 +11,7 @@ namespace XMLActions
     
     public abstract class XmlAction : Centipede.Action
     {
-        protected XmlAction(String name, Dictionary<String, Object> variables)
+        protected XmlAction(String name, IDictionary<string, object> variables)
             : base(name, variables)
         { }
         
@@ -40,7 +40,7 @@ namespace XMLActions
     [ActionCategory("XML", iconName = "xml", displayName="Open XML File")]
     public class OpenXmlFile : XmlAction
     {
-        public OpenXmlFile(Dictionary<String, Object> variables)
+        public OpenXmlFile(IDictionary<string, object> variables)
             : base("Open XML File", variables)
         { }
 
@@ -65,7 +65,7 @@ namespace XMLActions
     [ActionCategory("XML", displayName="Get XPath Node as Number", iconName="xml")]
     public class GetXPathNodeAsNumber : XmlAction
     {
-        public GetXPathNodeAsNumber(Dictionary<String, Object> v)
+        public GetXPathNodeAsNumber(IDictionary<string, object> v)
             : base("Get Xpath Node as Number", v)
         { }
 
@@ -89,7 +89,7 @@ namespace XMLActions
     [ActionCategory("XML", displayName = "Get XPath Node as String", iconName = "xml")]
     public class GetXmlNodeAsString : XmlAction
     {
-        public GetXmlNodeAsString(Dictionary<String, Object> v)
+        public GetXmlNodeAsString(IDictionary<string, object> v)
             : base("Get Xpath Node as String", v)
         { }
 
@@ -115,7 +115,7 @@ namespace XMLActions
     [ActionCategory("XML", displayName="Count matching nodes", iconName="xml")]
     public class CountMatchingXPathNodes : XmlAction
     {
-        public CountMatchingXPathNodes(Dictionary<String, Object> v)
+        public CountMatchingXPathNodes(IDictionary<string, object> v)
             : base("Count Matching nodes",v)
         { }
 
