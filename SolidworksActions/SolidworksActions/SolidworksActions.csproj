@@ -37,16 +37,20 @@
       <HintPath>..\..\..\Centipede\bin\Debug\Action.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CentipedeInterfaces">
+      <HintPath>..\..\..\Centipede\bin\Debug\CentipedeInterfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Interop.SldWorks">
-      <HintPath>..\..\..\AGDS Source\AGDS_SolidWorks\bin\Debug\Interop.SldWorks.dll</HintPath>
+      <HintPath>.\Interop.SldWorks.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.SwConst">
-      <HintPath>..\..\..\AGDS Source\AGDS_SolidWorks\bin\Debug\Interop.SwConst.dll</HintPath>
+      <HintPath>.\Interop.SwConst.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.SWPublished">
-      <HintPath>..\..\..\AGDS Source\AGDS_SolidWorks\bin\Debug\Interop.SWPublished.dll</HintPath>
+      <HintPath>.\Interop.SWPublished.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />

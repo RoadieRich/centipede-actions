@@ -37,6 +37,10 @@
       <HintPath>..\..\..\Centipede\bin\Debug\Action.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CentipedeInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Centipede\bin\Debug\CentipedeInterfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>

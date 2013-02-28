@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using SldWorks;
 using SwConst;
 
@@ -154,6 +155,19 @@ namespace SolidworksActions
                 return _instance;
             }
         }
+
+        public bool Visible
+        {
+            get
+            {
+                return _app.Visible;
+            }
+            set
+            {
+                _app.Visible = true;
+            }
+        }
+
         #endregion
 
 
