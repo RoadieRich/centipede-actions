@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Centipede;
+using CentipedeInterfaces;
 using SldWorks;
 using SwConst;
 using Action = Centipede.Action;
 
-
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToConstant.Global
-// ReSharper disable FieldCanBeMadeReadOnly.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToConstant.Global
-// ReSharper disable FieldCanBeMadeReadOnly.Global
 namespace SolidworksActions
 {   
     public abstract class SolidworksAction : Action
     {
-        protected SolidworksAction(String name, Dictionary<String, Object> variables)
-            : base(name, variables)
+        protected SolidworksAction(String name, IDictionary<String, Object> variables, ICentipedeCore c)
+            : base(name, variables, c)
         { }
 
         
@@ -34,6 +27,8 @@ namespace SolidworksActions
         {
             
             SolidWorks = SolidWorksWrapper.Instance;
+
+            SolidWorks.Visible = true;
 
             Object obj;
             Variables.TryGetValue( SolidWorksDocVar, out obj);
@@ -87,8 +82,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", iconName="solidworks")]
     public class OpenSolidWorksFile : SolidworksAction
     {
-        public OpenSolidWorksFile(Dictionary<String, Object> v)
-            : base("Open SolidWorks File", v)
+        public OpenSolidWorksFile(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Open SolidWorks File", v, c)
         { }
 
 
@@ -128,8 +123,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Insert Design Table", iconName = "solidworks")]
     public class SwInsertDesignTable : SolidworksAction
     {
-        public SwInsertDesignTable(Dictionary<String, Object> v)
-            : base("Insert Design Table", v)
+        public SwInsertDesignTable(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Insert Design Table", v, c)
         { }
         
         [ActionArgument(displayName = "Design Table Filename")]
@@ -148,8 +143,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Set Active Config", iconName = "solidworks")]
     public class SetActiveSolidWorksConfig : SolidworksAction
     {
-        public SetActiveSolidWorksConfig(Dictionary<String, Object> v)
-            : base("Set Active Config", v)
+        public SetActiveSolidWorksConfig(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Set Active Config", v, c)
         { }
 
         [ActionArgument(displayName = "Configuration name")]
@@ -170,8 +165,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Set Component Config", iconName = "solidworks")]
     public class SetSwComponentConfig : SolidworksAction
     {
-        public SetSwComponentConfig(Dictionary<String, Object> v)
-            : base("Set Component Config", v)
+        public SetSwComponentConfig(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Set Component Config", v,c)
         { }
 
         [ActionArgument(displayName = "Component Name")]
@@ -210,8 +205,8 @@ namespace SolidworksActions
         public String Value = "";
 
 
-        public SetSwDimension(Dictionary<String, Object> v)
-            : base("Set Dimension", v)
+        public SetSwDimension(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Set Dimension", v, c)
         { }
 
         protected override void DoAction()
@@ -223,7 +218,7 @@ namespace SolidworksActions
             }
             if (dimension.ReadOnly)
             {
-                Message(String.Format("Changed dimension {0} is read only.", DimensionName));
+                Message(String.Format("Changed dimension {0} is read only.", DimensionName),MessageLevel.Message);
             }
 
             Double val;
@@ -237,7 +232,7 @@ namespace SolidworksActions
             }
             if (dimension.IsAppliedToAllConfigurations())
             {
-                Message("Dimension update was limited to active configuration.");
+                Message("Dimension update was limited to active configuration.",MessageLevel.Notice);
             }
             if (!SolidWorksDoc.EditRebuild3())
             {
@@ -275,8 +270,8 @@ namespace SolidworksActions
         [ActionArgument]
         public bool Suppress = true;
 
-        public SetSwSuppressionState(Dictionary<String, Object> v)
-            : base("Set Suppression State", v)
+        public SetSwSuppressionState(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Set Suppression State", v, c)
         { }
 
         protected override void DoAction()
@@ -296,8 +291,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Delete Item", iconName = "solidworks")]
     public class DeleteSwItem : SolidworksAction
     {
-        public DeleteSwItem(Dictionary<String, Object> v)
-            : base("Delete Item", v)
+        public DeleteSwItem(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Delete Item", v, c)
         { }
 
         [ActionArgument(displayName = "Feature Name")]
@@ -322,8 +317,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Delete Inactive Configurations", iconName = "solidworks")]
     public class DeleteInactiveSwConfigurations : SolidworksAction
     {
-        public DeleteInactiveSwConfigurations(Dictionary<String, Object> v)
-            : base("Delete Inactive Configurations", v)
+        public DeleteInactiveSwConfigurations(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Delete Inactive Configurations", v, c)
         { }
 
         protected override void DoAction()
@@ -340,8 +335,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Delete Inactive Components", iconName = "solidworks")]
     public class DeleteInactiveSwComponents : SolidworksAction
     {
-        public DeleteInactiveSwComponents(Dictionary<String, Object> v)
-            : base("Delete Inactive Components", v)
+        public DeleteInactiveSwComponents(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Delete Inactive Components", v, c)
         { }
 
         protected override void DoAction()
@@ -369,8 +364,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Save", iconName = "solidworks")]
     public class SaveSolidWorks : SolidworksAction
     {
-        public SaveSolidWorks(Dictionary<String, Object> v)
-            : base("Save", v)
+        public SaveSolidWorks(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Save", v, c)
         { }
 
         protected override void DoAction()
@@ -389,15 +384,15 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Save As", iconName = "solidworks")]
     public class SolidWorksSaveAs : SolidworksAction
     {
-        public SolidWorksSaveAs(Dictionary<String, Object> v)
-                : base("Save As", v)
+        public SolidWorksSaveAs(Dictionary<String, Object> v, ICentipedeCore c)
+                : base("Save As", v, c)
         { }
 
         [ActionArgument]
         public String Filename = "";
 
         [ActionArgument(displayName = "Save as Copy")]
-        public bool SaveAsCopy = false;
+        public bool SaveAsCopy;
 
         protected override void DoAction()
         {
@@ -432,12 +427,12 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Close Active Document", iconName = "solidworks")]
     public class CloseActiveSwDoc : SolidworksAction
     {
-        public CloseActiveSwDoc(Dictionary<String, Object> v)
-            : base("Close Active Document", v)
+        public CloseActiveSwDoc(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Close Active Document", v, c)
         { }
 
         [ActionArgument(displayName = "Save Changes")]
-        public bool SaveChanges = false;
+        public bool SaveChanges;
 
         protected override void DoAction()
         {
@@ -468,12 +463,12 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Close All", iconName = "solidworks")]
     public class SwCloseAll : SolidworksAction
     {
-        public SwCloseAll(Dictionary<String, Object> v)
-            : base("Close All", v)
+        public SwCloseAll(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Close All", v, c)
         { }
 
         [ActionArgument(displayName = "Save Changes")]
-        public bool SaveChanges = false;
+        public bool SaveChanges;
 
         protected override void DoAction()
         {
@@ -508,8 +503,8 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Quit", iconName = "solidworks")]
     public class Quit : SolidworksAction
     {
-        public Quit(Dictionary<String, Object> v)
-            : base("Quit", v)
+        public Quit(Dictionary<String, Object> v, ICentipedeCore c)
+            : base("Quit", v, c)
         { }
 
         protected override void DoAction()
@@ -522,15 +517,15 @@ namespace SolidworksActions
     [Serializable]
     public class SolidWorksActionException : ActionException
     {
-        public SolidWorksActionException(Action action)
+        public SolidWorksActionException(IAction action)
             : base(String.Format("Error from Solidworks:\n{0}",
                 String.Join("\n", SolidWorksWrapper.Instance.GetErrors())), action)
         { }
-        public SolidWorksActionException(string message, Action action)
+        public SolidWorksActionException(string message, IAction action)
             : base(message, action)
         { }
 
-        public SolidWorksActionException(Exception inner, Action action)
+        public SolidWorksActionException(Exception inner, IAction action)
             : base(String.Format("Error from Solidworks:\n{0}",
                 String.Join("\n", SolidWorksWrapper.Instance.GetErrors())), inner, action)
         { }

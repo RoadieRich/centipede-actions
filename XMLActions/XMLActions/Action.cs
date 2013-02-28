@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
-using Centipede;
+using CentipedeInterfaces;
 
 
 namespace XMLActions
@@ -11,8 +11,8 @@ namespace XMLActions
     
     public abstract class XmlAction : Centipede.Action
     {
-        protected XmlAction(String name, IDictionary<string, object> variables)
-            : base(name, variables)
+        protected XmlAction(String name, IDictionary<string, object> variables, ICentipedeCore c)
+            : base(name, variables, c)
         { }
         
         protected override void InitAction()
@@ -40,8 +40,8 @@ namespace XMLActions
     [ActionCategory("XML", iconName = "xml", displayName="Open XML File")]
     public class OpenXmlFile : XmlAction
     {
-        public OpenXmlFile(IDictionary<string, object> variables)
-            : base("Open XML File", variables)
+        public OpenXmlFile(IDictionary<string, object> variables, ICentipedeCore c)
+            : base("Open XML File", variables, c)
         { }
 
         [ActionArgument]
@@ -65,8 +65,8 @@ namespace XMLActions
     [ActionCategory("XML", displayName="Get XPath Node as Number", iconName="xml")]
     public class GetXPathNodeAsNumber : XmlAction
     {
-        public GetXPathNodeAsNumber(IDictionary<string, object> v)
-            : base("Get Xpath Node as Number", v)
+        public GetXPathNodeAsNumber(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Get Xpath Node as Number", v, c)
         { }
 
         [ActionArgument]
@@ -89,8 +89,8 @@ namespace XMLActions
     [ActionCategory("XML", displayName = "Get XPath Node as String", iconName = "xml")]
     public class GetXmlNodeAsString : XmlAction
     {
-        public GetXmlNodeAsString(IDictionary<string, object> v)
-            : base("Get Xpath Node as String", v)
+        public GetXmlNodeAsString(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Get Xpath Node as String", v, c)
         { }
 
         [ActionArgument]
@@ -115,8 +115,8 @@ namespace XMLActions
     [ActionCategory("XML", displayName="Count matching nodes", iconName="xml")]
     public class CountMatchingXPathNodes : XmlAction
     {
-        public CountMatchingXPathNodes(IDictionary<string, object> v)
-            : base("Count Matching nodes",v)
+        public CountMatchingXPathNodes(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Count Matching nodes",v, c)
         { }
 
         [ActionArgument]

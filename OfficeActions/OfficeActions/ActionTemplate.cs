@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using CentipedeInterfaces;
 using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
-using Centipede;
 using Action = Centipede.Action;
 
 
@@ -10,8 +10,8 @@ namespace OfficeActions
 {
     public abstract class WordAction : Action
     {
-        protected WordAction(String name, IDictionary<string, object> variables)
-            : base(name, variables)
+        protected WordAction(String name, IDictionary<string, object> variables, ICentipedeCore c)
+            : base(name, variables, c)
         { }
 
         protected Word.Application WordApp;
@@ -20,8 +20,8 @@ namespace OfficeActions
 
     public abstract class ExcelAction : Action
     {
-        protected ExcelAction(String name, IDictionary<string, object> variables)
-            : base(name, variables)
+        protected ExcelAction(String name, IDictionary<string, object> variables, ICentipedeCore c)
+            : base(name, variables, c)
         { }
 
         protected Excel.Workbook WorkBook;
@@ -86,8 +86,8 @@ namespace OfficeActions
     [ActionCategory("Office", displayName = "Open Excel Document", iconName = "excel")]
     public class OpenExcelDocument : ExcelAction
     {
-        public OpenExcelDocument(IDictionary<string, object> variables)
-            : base("Open Excel Document", variables)
+        public OpenExcelDocument(IDictionary<string, object> variables, ICentipedeCore c)
+            : base("Open Excel Document", variables, c)
         { }
 
         [ActionArgument]
@@ -105,8 +105,8 @@ namespace OfficeActions
     [ActionCategory("Office", iconName="excel", displayName="Get Cell Value")]
     public class GetCellValue : ExcelAction
     {
-        public GetCellValue(IDictionary<string, object> v)
-            : base("Get Value From Cell", v)
+        public GetCellValue(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Get Value From Cell", v, c)
         { }
 
         [ActionArgument]
@@ -127,8 +127,8 @@ namespace OfficeActions
     [ActionCategory("Office", iconName="excel", displayName="Set Cell Value")]
     public class SetCellValue : ExcelAction
     {
-        public SetCellValue(IDictionary<string, object> v)
-            : base("Get Value From Cell", v)
+        public SetCellValue(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Get Value From Cell", v, c)
         { }
 
         [ActionArgument]
@@ -156,8 +156,8 @@ namespace OfficeActions
     [ActionCategory("Office", iconName="excel", displayName="Save Workbook")]
     public class SaveWorkbook : ExcelAction
     {
-        public SaveWorkbook(IDictionary<string, object> v)
-            : base("Save Workbook", v)
+        public SaveWorkbook(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Save Workbook", v, c)
         { }
         
         [ActionArgument]
@@ -182,8 +182,8 @@ namespace OfficeActions
     public class ShowWorksheet : ExcelAction
     {
 
-        public ShowWorksheet(IDictionary<string, object> v)
-            : base("Show workbook", v)
+        public ShowWorksheet(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Show workbook", v, c)
         { }
 
         protected override void DoAction()
