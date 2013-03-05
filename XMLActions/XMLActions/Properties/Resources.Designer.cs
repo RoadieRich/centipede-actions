@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Centipede.XMLActions.Properties {
+namespace XMLActions.Properties {
     using System;
     
     
