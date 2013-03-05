@@ -1,0 +1,5 @@
+c:\documents and settings\rlovely\my documents\visual studio 2010\Projects\ShellActions\ShellActions\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\documents and settings\rlovely\my documents\visual studio 2010\Projects\ShellActions\ShellActions\bin\Debug\ShellActions.dll
+c:\documents and settings\rlovely\my documents\visual studio 2010\Projects\ShellActions\ShellActions\bin\Debug\ShellActions.pdb
+c:\documents and settings\rlovely\my documents\visual studio 2010\Projects\ShellActions\ShellActions\obj\x86\Debug\ShellActions.dll
+c:\documents and settings\rlovely\my documents\visual studio 2010\Projects\ShellActions\ShellActions\obj\x86\Debug\ShellActions.pdb
