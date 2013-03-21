@@ -39,7 +39,7 @@ namespace SolidworksActions
 
 		protected override void CleanupAction()
 		{
-			SolidWorksDoc.Rebuild((int)swRebuildOptions_e.swRebuildAll);
+			//SolidWorksDoc.Rebuild((int)swRebuildOptions_e.swRebuildAll);
 			Variables[SolidWorksDocVar] = SolidWorksDoc;
 		}
 				
@@ -62,7 +62,12 @@ namespace SolidworksActions
 				}
 				catch (Exception e)
 				{
-					
+					const string source = @"Centipede SolidWorks Action";
+					if(!EventLog.SourceExists(source))
+					{
+						EventLog.CreateEventSource(source, @"Application");
+					}
+					EventLog.WriteEntry(source, string.Format("Exception in SolidWorksAction.Dispose: {0}", e), EventLogEntryType.Warning);
 				}
 				// ReSharper restore EmptyGeneralCatchClause
 				finally
@@ -224,7 +229,10 @@ namespace SolidworksActions
 			}
 
 			Double val;
-			if (!Double.TryParse(Value, out val))
+
+			string expanded = ParseStringForVariable(Value);
+
+			if (!Double.TryParse(expanded, out val))
 			{
 				throw new SolidWorksActionException(String.Format("Invalid Value for value: {0}", Value), this);
 			}
@@ -243,18 +251,26 @@ namespace SolidworksActions
 		}
 	}
 
-	//[ActionCategory("SolidWorks", displayName="Rebuild")]
-	//public class RebuildSolidWorks : SolidworksAction
-	//{
-	//    public RebuildSolidWorks(IDictionary<String, Object> v)
-	//        : base("Rebuild", v)
-	//    { }
+	[ActionCategory("SolidWorks", displayName = "Rebuild")]
+	public class RebuildSolidWorks : SolidworksAction
+	{
+		public RebuildSolidWorks(IDictionary<String, Object> v, ICentipedeCore c)
+			: base("Rebuild", v, c)
+		{
+		}
 
-	//    protected override void DoAction()
-	//    {
-	//        throw new NotImplementedException();
-	//    }
-	//}
+		[ActionArgument] 
+		public Boolean TopOnly;
+
+		protected override void DoAction()
+		{
+			if (!SolidWorksDoc.ForceRebuild3(TopOnly))
+			{
+				throw new SolidWorksActionException("CAnnot force rebuild", this);
+			}
+			
+		}
+	}
 
 	[ActionCategory("SolidWorks", displayName = "Set Suppression State", iconName = "solidworks")]
 	public class SetSwSuppressionState : SolidworksAction
