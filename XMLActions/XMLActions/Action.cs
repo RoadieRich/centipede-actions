@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using System.Xml.XPath;
 using CentipedeInterfaces;
 
@@ -48,15 +47,15 @@ namespace XMLActions
         public String Filename = "";
         protected override void DoAction()
         {
-            var doc = new XmlDocument();
+            XPathDocument doc;
+            string filename = ParseStringForVariable(Filename);
             try
             {
-                doc.Load(ParseStringForVariable(Filename));
+                doc = new XPathDocument(filename);
             }
             catch (IOException e)
             {
-                
-                throw new ActionException("File not found.",  e, this);
+                throw new ActionException(string.Format("File {0} not found ({1}).", this.Filename),  e, this);
             }
             XmlNav = doc.CreateNavigator();
         }
