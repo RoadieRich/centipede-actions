@@ -82,7 +82,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", iconName="solidworks")]
     public class OpenSolidWorksFile : SolidworksAction
     {
-        public OpenSolidWorksFile(Dictionary<String, Object> v, ICentipedeCore c)
+        public OpenSolidWorksFile(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Open SolidWorks File", v, c)
         { }
 
@@ -106,7 +106,7 @@ namespace SolidworksActions
     //[ActionCategory("SolidWorks", iconName = "solidworks")]
     //public class ActivateSolidWorksDoc : SolidworksAction
     //{
-    //    public ActivateSolidWorksDoc(Dictionary<String, Object> v)
+    //    public ActivateSolidWorksDoc(IDictionary<String, Object> v)
     //        : base("Activate SolidWorks Document", v)
     //    { }
                 
@@ -123,7 +123,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Insert Design Table", iconName = "solidworks")]
     public class SwInsertDesignTable : SolidworksAction
     {
-        public SwInsertDesignTable(Dictionary<String, Object> v, ICentipedeCore c)
+        public SwInsertDesignTable(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Insert Design Table", v, c)
         { }
         
@@ -143,7 +143,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Set Active Config", iconName = "solidworks")]
     public class SetActiveSolidWorksConfig : SolidworksAction
     {
-        public SetActiveSolidWorksConfig(Dictionary<String, Object> v, ICentipedeCore c)
+        public SetActiveSolidWorksConfig(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Set Active Config", v, c)
         { }
 
@@ -165,7 +165,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Set Component Config", iconName = "solidworks")]
     public class SetSwComponentConfig : SolidworksAction
     {
-        public SetSwComponentConfig(Dictionary<String, Object> v, ICentipedeCore c)
+        public SetSwComponentConfig(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Set Component Config", v,c)
         { }
 
@@ -205,7 +205,7 @@ namespace SolidworksActions
         public String Value = "";
 
 
-        public SetSwDimension(Dictionary<String, Object> v, ICentipedeCore c)
+        public SetSwDimension(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Set Dimension", v, c)
         { }
 
@@ -218,7 +218,7 @@ namespace SolidworksActions
             }
             if (dimension.ReadOnly)
             {
-                Message(String.Format("Changed dimension {0} is read only.", DimensionName),MessageLevel.Message);
+                Warning("Changed dimension {0} is read only.", DimensionName);
             }
 
             Double val;
@@ -232,7 +232,7 @@ namespace SolidworksActions
             }
             if (dimension.IsAppliedToAllConfigurations())
             {
-                Message("Dimension update was limited to active configuration.",MessageLevel.Notice);
+                Warning("Dimension update was limited to active configuration.");
             }
             if (!SolidWorksDoc.EditRebuild3())
             {
@@ -244,7 +244,7 @@ namespace SolidworksActions
     //[ActionCategory("SolidWorks", displayName="Rebuild")]
     //public class RebuildSolidWorks : SolidworksAction
     //{
-    //    public RebuildSolidWorks(Dictionary<String, Object> v)
+    //    public RebuildSolidWorks(IDictionary<String, Object> v)
     //        : base("Rebuild", v)
     //    { }
 
@@ -270,7 +270,7 @@ namespace SolidworksActions
         [ActionArgument]
         public bool Suppress = true;
 
-        public SetSwSuppressionState(Dictionary<String, Object> v, ICentipedeCore c)
+        public SetSwSuppressionState(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Set Suppression State", v, c)
         { }
 
@@ -291,7 +291,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Delete Item", iconName = "solidworks")]
     public class DeleteSwItem : SolidworksAction
     {
-        public DeleteSwItem(Dictionary<String, Object> v, ICentipedeCore c)
+        public DeleteSwItem(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Delete Item", v, c)
         { }
 
@@ -317,7 +317,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Delete Inactive Configurations", iconName = "solidworks")]
     public class DeleteInactiveSwConfigurations : SolidworksAction
     {
-        public DeleteInactiveSwConfigurations(Dictionary<String, Object> v, ICentipedeCore c)
+        public DeleteInactiveSwConfigurations(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Delete Inactive Configurations", v, c)
         { }
 
@@ -335,7 +335,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Delete Inactive Components", iconName = "solidworks")]
     public class DeleteInactiveSwComponents : SolidworksAction
     {
-        public DeleteInactiveSwComponents(Dictionary<String, Object> v, ICentipedeCore c)
+        public DeleteInactiveSwComponents(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Delete Inactive Components", v, c)
         { }
 
@@ -364,7 +364,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Save", iconName = "solidworks")]
     public class SaveSolidWorks : SolidworksAction
     {
-        public SaveSolidWorks(Dictionary<String, Object> v, ICentipedeCore c)
+        public SaveSolidWorks(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Save", v, c)
         { }
 
@@ -384,7 +384,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Save As", iconName = "solidworks")]
     public class SolidWorksSaveAs : SolidworksAction
     {
-        public SolidWorksSaveAs(Dictionary<String, Object> v, ICentipedeCore c)
+        public SolidWorksSaveAs(IDictionary<String, Object> v, ICentipedeCore c)
                 : base("Save As", v, c)
         { }
 
@@ -427,7 +427,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Close Active Document", iconName = "solidworks")]
     public class CloseActiveSwDoc : SolidworksAction
     {
-        public CloseActiveSwDoc(Dictionary<String, Object> v, ICentipedeCore c)
+        public CloseActiveSwDoc(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Close Active Document", v, c)
         { }
 
@@ -463,7 +463,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Close All", iconName = "solidworks")]
     public class SwCloseAll : SolidworksAction
     {
-        public SwCloseAll(Dictionary<String, Object> v, ICentipedeCore c)
+        public SwCloseAll(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Close All", v, c)
         { }
 
@@ -503,7 +503,7 @@ namespace SolidworksActions
     [ActionCategory("SolidWorks", displayName = "Quit", iconName = "solidworks")]
     public class Quit : SolidworksAction
     {
-        public Quit(Dictionary<String, Object> v, ICentipedeCore c)
+        public Quit(IDictionary<String, Object> v, ICentipedeCore c)
             : base("Quit", v, c)
         { }
 
