@@ -62,12 +62,7 @@ namespace SolidworksActions
 				}
 				catch (Exception e)
 				{
-					const string source = @"Centipede SolidWorks Action";
-					if(!EventLog.SourceExists(source))
-					{
-						EventLog.CreateEventSource(source, @"Application");
-					}
-					EventLog.WriteEntry(source, string.Format("Exception in SolidWorksAction.Dispose: {0}", e), EventLogEntryType.Warning);
+					
 				}
 				// ReSharper restore EmptyGeneralCatchClause
 				finally
@@ -99,7 +94,7 @@ namespace SolidworksActions
 		{   
 			try
 			{
-				SolidWorksDoc = SolidWorks.OpenFile(Filename);
+				SolidWorksDoc = SolidWorks.OpenFile(ParseStringForVariable(Filename));
 			}
 			catch (SolidWorksException e)
 			{
