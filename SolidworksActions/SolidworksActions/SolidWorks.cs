@@ -77,16 +77,24 @@ namespace SolidworksActions
 				ref err,
 				ref warn);
 
-			
+
 			if (err != 0)
 			{
-				object messages, msgIds, msgTypes;
-				int count = _app.GetErrorMessages(out messages, out msgIds, out msgTypes);
 
-				String exceptionMessage = String.Format("{0} error(s) occurred opening {1}:\n{2}", count, filename,
-				                                        String.Join(Environment.NewLine, messages));
+				int count;
 
-				throw new SolidWorksException(exceptionMessage);
+				var messages = GetErrors(out count);
+				if (count != 0)
+				{
+					String exceptionMessage;
+					if (messages != null)
+						exceptionMessage = String.Format("{0} error(s) occurred opening {1}:\n{2}", count, filename,
+														String.Join(Environment.NewLine, messages));
+					else
+						exceptionMessage = "An unknown error occurred.";
+
+					throw new SolidWorksException(exceptionMessage);
+				}
 			}
 			return doc;
 		}
