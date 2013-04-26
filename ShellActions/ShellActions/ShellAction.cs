@@ -18,7 +18,7 @@ namespace ShellActions
         protected static DirectoryInfo Pwd = new DirectoryInfo(Environment.CurrentDirectory);
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Set Current Directory")]
     public class SetCwd : ShellAction
     {
         public SetCwd(IDictionary<string, object> v, ICentipedeCore core)
@@ -41,11 +41,11 @@ namespace ShellActions
         }
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Change current directory")]
     public class Cd : ShellAction
     {
         public Cd(IDictionary<string, object> v, ICentipedeCore core)
-            : base("cd", v, core)
+            : base("Change current directory", v, core)
         { }
 
         [ActionArgument]
@@ -65,11 +65,11 @@ namespace ShellActions
         }
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName="Create Directory")]
     public class MkDir : ShellAction
     {
         public MkDir(IDictionary<string, object> v, ICentipedeCore core)
-                : base("MkDir", v, core)
+                : base("Create Directory", v, core)
         { }
 
         [ActionArgument]
@@ -88,11 +88,11 @@ namespace ShellActions
         }
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Copy File")]
     public class Cp : ShellAction
     {
         public Cp(IDictionary<string, object> v, ICentipedeCore core)
-                : base("cp", v, core)
+                : base("Copy File", v, core)
         { }
 
         [ActionArgument]
@@ -103,9 +103,13 @@ namespace ShellActions
 
         protected override void DoAction()
         {
-            foreach (FileInfo file in Pwd.EnumerateFiles(From))
+            string from = ParseStringForVariable(this.From);
+
+            DirectoryInfo directory;
+            directory = Path.IsPathRooted(@from) ? FileSystem.GetDirectoryInfo(@from) : Pwd;
+            foreach (FileInfo file in directory.EnumerateFiles(@from))
             {
-                file.CopyTo(To, AllowOverWrite);
+                file.CopyTo(ParseStringForVariable(this.To), this.AllowOverWrite);
             }
         }
 
@@ -114,11 +118,11 @@ namespace ShellActions
 
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Move File")]
     public class Mv : ShellAction
     {
         public Mv(IDictionary<string, object> v, ICentipedeCore core)
-            : base("mv", v, core)
+            : base("Move File", v, core)
         { }
 
         [ActionArgument]
@@ -136,14 +140,14 @@ namespace ShellActions
         }
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Get Current Directory Name")]
     public class Pwd : ShellAction
     {
         public Pwd(IDictionary<string, object> v, ICentipedeCore core)
-            : base("pwd", v, core)
+            : base("Get Current Directory Name", v, core)
         { }
 
-        [ActionArgument]
+        [ActionArgument(Literal=true)]
         public String DestinationVariable = "";
 
         protected override void DoAction()
@@ -152,11 +156,11 @@ namespace ShellActions
         }
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Delete File")]
     public class Del : ShellAction
     {
         public Del(IDictionary<string, object> v, ICentipedeCore core)
-            : base("del", v, core)
+            : base("Delete File", v, core)
         { }
 
         [ActionArgument]
@@ -177,7 +181,7 @@ namespace ShellActions
         }
     }
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Run Program")]
     public class Start : ShellAction
     {
         [ActionArgument]
@@ -187,7 +191,7 @@ namespace ShellActions
         public string Arguments;
 
         public Start(IDictionary<string, object> v, ICentipedeCore core)
-                : base("start", v, core)
+                : base("Run Program", v, core)
         { }
 
         protected override void DoAction()
@@ -201,7 +205,7 @@ namespace ShellActions
 
             Process process = Process.Start(startInfo);
 
-            process.OutputDataReceived += (sender, args) => Message(args.Data, MessageLevel.Message);
+            process.OutputDataReceived += (sender, args) => Message(args.Data, MessageLevel.Action);
             process.ErrorDataReceived += (sender, args) => Message(args.Data, MessageLevel.Error);
 
             if (!this.DontWait)
@@ -221,7 +225,7 @@ namespace ShellActions
     }
 
 
-    [ActionCategory("Shell")]
+    [ActionCategory("Shell", DisplayName = "Get Dir from filename")]
     public class GetContainingDirectory : ShellAction
     {
         public GetContainingDirectory(IDictionary<string, object> v, ICentipedeCore core)
@@ -231,7 +235,7 @@ namespace ShellActions
         [ActionArgument]
         public String Filename;
 
-        [ActionArgument]
+        [ActionArgument(Literal=true)]
         public String DestinationVar = "Path";
         
         protected override void DoAction()
