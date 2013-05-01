@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MathCadActions")]
+[assembly: AssemblyTitle("MathCADActions")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Chemineer")]
-[assembly: AssemblyProduct("Centipede")]
-[assembly: AssemblyCopyright("Copyright © Chemineer 2012")]
+[assembly: AssemblyProduct("MathCADActions")]
+[assembly: AssemblyCopyright("Copyright © Chemineer 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("54fcdc1b-fcd3-4ea3-bb59-e41dd90c4bb8")]
+[assembly: Guid("a3faeb32-008a-4a39-97c7-3e0cfee3f904")]
 
 // Version information for an assembly consists of the following four values:
 //
