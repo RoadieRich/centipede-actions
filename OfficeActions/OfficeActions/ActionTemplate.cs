@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using CentipedeInterfaces;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -94,7 +95,7 @@ namespace OfficeActions
         public String Filename = "";
 
         [ActionArgument]
-        public bool Visible = false;
+        public bool Visible;
 
        // [ActionArgument(displayName = "Variable to store document")]
        // public String ExcelDocumentVar = "WordDoc";
@@ -241,4 +242,48 @@ namespace OfficeActions
             // ReSharper restore RedundantCast
         }
     }
+
+    [ActionCategory("Office", iconName="excel", DisplayName="Run Macro")]
+    public class RunMacro : ExcelAction
+    {
+
+        public RunMacro(IDictionary<string, object> v, ICentipedeCore c)
+            : base("Show workbook", v, c)
+        { }
+
+        
+        [ActionArgument(DisplayName = "Macro Name")]
+        public String MacroName = "";
+
+        [ActionArgument(DisplayName = "Macro Arguments", Usage = "Arguments, separated by commas")]
+        public string MacroArguments = "";
+
+        protected override void DoAction()
+        {
+            if (String.IsNullOrWhiteSpace(MacroArguments))
+            {
+                ExcelApp.Run(MacroName);
+            }
+            else
+            {
+                ExcelApp.GetType().InvokeMember("Run",
+                                                System.Reflection.BindingFlags.Default |
+                                                System.Reflection.BindingFlags.InvokeMethod,
+                                                null,
+                                                ExcelApp,
+                                                this.GetArgsArray());
+            }
+        }
+
+        private object[] GetArgsArray()
+        {
+            return this.MacroArguments.Split(',')
+                                      .Select(s => s.Trim())
+                                      .Cast<Object>()
+                                      .ToArray();
+        }
+    }
+
+
+
 }
