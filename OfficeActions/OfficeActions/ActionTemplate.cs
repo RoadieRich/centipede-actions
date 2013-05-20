@@ -260,19 +260,14 @@ namespace OfficeActions
 
         protected override void DoAction()
         {
-            if (String.IsNullOrWhiteSpace(MacroArguments))
-            {
-                ExcelApp.Run(MacroName);
-            }
-            else
-            {
-                ExcelApp.GetType().InvokeMember("Run",
-                                                System.Reflection.BindingFlags.Default |
-                                                System.Reflection.BindingFlags.InvokeMethod,
-                                                null,
-                                                ExcelApp,
-                                                this.GetArgsArray());
-            }
+            ExcelApp.GetType().InvokeMember("Run",                                          // it'd be nice if there
+                                            System.Reflection.BindingFlags.Default |        // was an easier way of
+                                            System.Reflection.BindingFlags.InvokeMethod,    // doing this, but we're
+                                            null,                                           // bound by c# being a
+                                            ExcelApp,                                       // strongly typed language
+                                            this.GetArgsArray());
+
+
         }
 
         private object[] GetArgsArray()
