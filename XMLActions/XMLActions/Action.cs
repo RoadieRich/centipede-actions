@@ -55,7 +55,7 @@ namespace XMLActions
             }
             catch (IOException e)
             {
-                throw new ActionException(string.Format("File {0} not found ({1}).", this.Filename),  e, this);
+                throw new ActionException(string.Format("File {0} not found.", this.Filename),  e, this);
             }
             XmlNav = doc.CreateNavigator();
         }
@@ -105,8 +105,10 @@ namespace XMLActions
                 throw new ActionException("XML file not opened, or incorrect variable name", this);
             }
 
-            String xPath = String.Format("string({0})", ParseStringForVariable(XPath));
-            Variables[ParseStringForVariable(ResultVar)] = XmlNav.Evaluate(xPath) as String;
+            string parsed = ParseStringForVariable(XPath);
+            String xPath = String.Format("string({0})", parsed);
+            string varname = ParseStringForVariable(ResultVar);
+            Variables[varname] = XmlNav.Evaluate(xPath) as String;
         }
     }
 
