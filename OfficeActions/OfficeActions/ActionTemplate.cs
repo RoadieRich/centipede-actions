@@ -111,6 +111,31 @@ namespace OfficeActions
         }
     }
 
+
+    [ActionCategory("Office", DisplayName = "Create New Excel Document", iconName = "excel")]
+    public class NewExcelDocument : ExcelAction
+    {
+        public NewExcelDocument(IDictionary<string, object> variables, ICentipedeCore c)
+            : base("Create New Excel Document", variables, c)
+        { }
+        
+        [ActionArgument]
+        public bool Visible = true;
+
+       // [ActionArgument(displayName = "Variable to store document")]
+       // public String ExcelDocumentVar = "WordDoc";
+
+        protected override void DoAction()
+        {
+            WorkBook = ExcelApp.Workbooks.Add();
+            if (Visible)
+            {
+                ExcelApp.Visible = Visible;
+                WorkBook.Activate();
+            }
+        }
+    }
+
     [ActionCategory("Office", iconName="excel", DisplayName="Get Cell Value")]
     public class GetCellValue : ExcelAction
     {
@@ -188,7 +213,7 @@ namespace OfficeActions
             int sheetNo;
             int.TryParse(ParseStringForVariable(SheetNumber), out sheetNo);
 
-            Excel.Worksheet sheet = (Excel.Worksheet)WorkBook.Worksheets.Item[SheetNumber];
+            Excel.Worksheet sheet = (Excel.Worksheet)WorkBook.Worksheets[sheetNo];
 
             sheet.Range[ParseStringForVariable(Address)].Value2 = ParseStringForVariable(Value);
 
