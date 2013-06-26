@@ -59,7 +59,7 @@ namespace MathCADActions
 
         protected void SetValueInRegion(IMathcadRegion2 region, String value, McValueType type, string units)
         {
-            IPythonEngine engine = GetCurrentCore().PythonEngine;
+            Centipede.IPythonEngine engine = GetCurrentCore().PythonEngine;
 
             dynamic evaluated = engine.Evaluate(value);
 
