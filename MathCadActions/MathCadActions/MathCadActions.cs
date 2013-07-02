@@ -166,7 +166,7 @@ namespace MathCADActions
     [ActionCategory("MathCad", DisplayName = "Open MathCad File")]
     public class OpenFile : MathCadAction
     {
-        public OpenFile(string name, IDictionary<string, object> variables, ICentipedeCore core)
+        public OpenFile(IDictionary<string, object> variables, ICentipedeCore core)
             : base("Open Mathcad File", variables, core)
         { }
 
@@ -217,7 +217,7 @@ namespace MathCADActions
     [ActionCategory("MathCad", DisplayName = "Close")]
     public class Close : MathCadAction
     {
-        public Close(string name, IDictionary<string, object> variables, ICentipedeCore core)
+        public Close(IDictionary<string, object> variables, ICentipedeCore core)
             : base("Close Mathcad File", variables, core)
         { }
 
