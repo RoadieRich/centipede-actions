@@ -84,7 +84,7 @@ namespace OfficeActions
         }
     }
 
-    [ActionCategory("Office", DisplayName = "Open Excel Document", iconName = "excel")]
+    [ActionCategory("Office", DisplayName = "Open Excel Document", IconName = "excel")]
     public class OpenExcelDocument : ExcelAction
     {
         public OpenExcelDocument(IDictionary<string, object> variables, ICentipedeCore c)
@@ -95,7 +95,7 @@ namespace OfficeActions
         public String Filename = "";
 
         [ActionArgument]
-        public bool Visible;
+        public bool Visible = true;
 
        // [ActionArgument(displayName = "Variable to store document")]
        // public String ExcelDocumentVar = "WordDoc";
@@ -112,7 +112,7 @@ namespace OfficeActions
     }
 
 
-    [ActionCategory("Office", DisplayName = "Create New Excel Document", iconName = "excel")]
+    [ActionCategory("Office", DisplayName = "Create New Excel Document", IconName = "excel")]
     public class NewExcelDocument : ExcelAction
     {
         public NewExcelDocument(IDictionary<string, object> variables, ICentipedeCore c)
@@ -136,7 +136,7 @@ namespace OfficeActions
         }
     }
 
-    [ActionCategory("Office", iconName="excel", DisplayName="Get Cell Value")]
+    [ActionCategory("Office", IconName="excel", DisplayName="Get Cell Value")]
     public class GetCellValue : ExcelAction
     {
         public GetCellValue(IDictionary<string, object> v, ICentipedeCore c)
@@ -189,7 +189,7 @@ namespace OfficeActions
         }
     }
 
-    [ActionCategory("Office", iconName="excel", DisplayName = "Set Cell Value")]
+    [ActionCategory("Office", IconName="excel", DisplayName = "Set Cell Value")]
     public class SetCellValue : ExcelAction
     {
         public SetCellValue(IDictionary<string, object> v, ICentipedeCore c)
@@ -224,7 +224,7 @@ namespace OfficeActions
         }
     }
 
-    [ActionCategory("Office", iconName="excel", DisplayName = "Save Workbook")]
+    [ActionCategory("Office", IconName="excel", DisplayName = "Save Workbook")]
     public class SaveWorkbook : ExcelAction
     {
         public SaveWorkbook(IDictionary<string, object> v, ICentipedeCore c)
@@ -249,7 +249,7 @@ namespace OfficeActions
         }
     }
 
-    [ActionCategory("Office", iconName="excel", DisplayName="Show Worksheet")]
+    [ActionCategory("Office", IconName="excel", DisplayName="Show Worksheet")]
     public class ShowWorksheet : ExcelAction
     {
 
@@ -268,7 +268,7 @@ namespace OfficeActions
         }
     }
 
-    [ActionCategory("Office", iconName="excel", DisplayName="Run Macro")]
+    [ActionCategory("Office", IconName="excel", DisplayName="Run Macro")]
     public class RunMacro : ExcelAction
     {
 
