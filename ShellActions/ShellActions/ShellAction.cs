@@ -190,18 +190,24 @@ namespace ShellActions
         [ActionArgument]
         public string Arguments;
 
+        [ActionArgument]
+        public string Verb;
+
         public Start(IDictionary<string, object> v, ICentipedeCore core)
                 : base("Run Program", v, core)
         { }
 
         protected override void DoAction()
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo(ParseStringForVariable(Filename), ParseStringForVariable(Arguments))
-                                         {
-                                                 CreateNoWindow = this.Background,
-                                                 RedirectStandardError = true,
-                                                 RedirectStandardOutput =   true
-                                         };
+            var startInfo =
+                new ProcessStartInfo(this.ParseStringForVariable(this.Filename),
+                                     this.ParseStringForVariable(this.Arguments))
+                {
+                    Verb = String.IsNullOrWhiteSpace(this.Verb) ? this.ParseStringForVariable(this.Verb) : null,
+                    CreateNoWindow = this.Background,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true
+                };
 
             Process process = Process.Start(startInfo);
 

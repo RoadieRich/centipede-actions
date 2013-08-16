@@ -57,9 +57,8 @@ namespace OfficeActions
             }
             //ExcelApp = Excel.ApplicationClass
             
-            
-            
         }
+
         protected sealed override void CleanupAction()
         {
             Variables[WorksheetVarName] = WorkBook;
@@ -276,8 +275,8 @@ namespace OfficeActions
             : base("Show workbook", v, c)
         { }
 
-        
-        [ActionArgument(DisplayName = "Macro Name")]
+
+        [ActionArgument(DisplayName = "Macro Name", Literal = true)]
         public String MacroName = "";
 
         [ActionArgument(DisplayName = "Macro Arguments", Usage = "Arguments, separated by commas")]
@@ -290,17 +289,21 @@ namespace OfficeActions
                                             System.Reflection.BindingFlags.InvokeMethod,    // doing this, but we're
                                             null,                                           // bound by c# being a
                                             ExcelApp,                                       // strongly typed language
-                                            this.GetArgsArray());
+                                            this.GetMacroArgArray());
 
 
         }
 
-        private object[] GetArgsArray()
+        private object[] GetMacroArgArray()
         {
-            return this.MacroArguments.Split(',')
-                                      .Select(s => s.Trim())
-                                      .Cast<Object>()
-                                      .ToArray();
+            string[] splitArgs = this.ParseStringForVariable(this.MacroArguments).Split(',');
+
+            var invokeArgs = new object[splitArgs.Length + 1];
+            invokeArgs[0] = this.MacroName;
+
+            splitArgs.Select(s => s.Trim()).ToArray().CopyTo(invokeArgs, 1);
+
+            return invokeArgs;
         }
     }
 

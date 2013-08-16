@@ -7,20 +7,20 @@ using CentipedeInterfaces;
 
 namespace XMLActions
 {
-    
+
     public abstract class XmlAction : Centipede.Action
     {
         protected XmlAction(String name, IDictionary<string, object> variables, ICentipedeCore c)
             : base(name, variables, c)
         { }
-        
+
         protected override void InitAction()
         {
             base.InitAction();
             Object obj;
             Variables.TryGetValue(XmlFileVar, out obj);
             XmlNav = obj as XPathNavigator;
-            
+
         }
 
         protected override void CleanupAction()
@@ -30,8 +30,10 @@ namespace XMLActions
         }
 
         protected XPathNavigator XmlNav;
-        
-        [ActionArgument(displayName = "XML File variable name", usage = "Name of variable used to store the xml file")]
+
+        [ActionArgument(DisplayName = "XML File variable name",
+                Usage = "Name of variable used to store the xml file",
+                Literal = true)]
         public String XmlFileVar = "xmlFile";
 
     }

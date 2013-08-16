@@ -63,7 +63,7 @@ namespace MathCADActions
 
             dynamic evaluated = engine.Evaluate(value);
 
-            XmlDocument regionXml = new XmlDocument();
+            var regionXml = new XmlDocument();
             regionXml.LoadXml(region.MathInterface.XML);
 
             if (!type.HasFlag(McValueType.Numeric))
@@ -81,7 +81,7 @@ namespace MathCADActions
 
         private void SetNumericValue(IMathcadRegion2 region, dynamic evaluated, McValueType type, string units)
         {
-            XmlDocument regionXml = new XmlDocument();
+            var regionXml = new XmlDocument();
             regionXml.LoadXml(region.MathInterface.XML);
 
             XmlElement valueElement;
@@ -146,7 +146,7 @@ namespace MathCADActions
 
         private XmlElement ApplyUnits(XmlElement realElement, string units)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             var apply = doc.CreateElement("ml:apply");
 
             var mult = doc.CreateElement("ml:mult");
@@ -391,8 +391,6 @@ namespace MathCADActions
             return parens;
         }
     }
-
-    
 }
 
 
