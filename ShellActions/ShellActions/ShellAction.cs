@@ -35,9 +35,9 @@ namespace ShellActions
             {
                 Pwd = new DirectoryInfo(ParseStringForVariable(DirectoryPath));
             }
-            catch (DirectoryNotFoundException e)
+            catch (ArgumentException e)
             {
-                throw new ActionException(string.Format("Directory not found: {0}", DirectoryPath), e, this);
+                throw new ActionException(string.Format("Bad Path {0}", DirectoryPath), e, this);
             }
         }
     }
@@ -61,7 +61,17 @@ namespace ShellActions
             }
             catch (DirectoryNotFoundException e)
             {
-                throw new ActionException(string.Format("Directory not found: {0}", DirectoryName), e, this);
+                throw new ActionException(string.Format("Directory not found: {0}", DirectoryName),
+                                          e,
+                                          this);
+            }
+            catch (ArgumentException e)
+            {
+                throw new ActionException(string.Format("Bad Path {0}", DirectoryName), e, this);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new ActionException(string.Format("Bad Path {0}", DirectoryName), e, this);
             }
         }
     }
@@ -193,6 +203,12 @@ namespace ShellActions
         [ActionArgument]
         public string Verb;
 
+        [ActionArgument]
+        public bool Background;
+
+        [ActionArgument]
+        public bool DontWait;
+
         public Start(IDictionary<string, object> v, ICentipedeCore core)
                 : base("Run Program", v, core)
         { }
@@ -218,16 +234,7 @@ namespace ShellActions
             {
                 process.WaitForExit();
             }
-            
         }
-
-        
-        [ActionArgument]
-        public bool Background;
-
-        [ActionArgument]
-        public bool DontWait;
-
     }
 
 
