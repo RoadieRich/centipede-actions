@@ -56,6 +56,7 @@ namespace MathCADActions
             base.Dispose();
         }
 
+        internal const string CategoryName = "MathCad";
 
         protected void SetValueInRegion(IMathcadRegion2 region, String value, McValueType type, string units)
         {
@@ -163,13 +164,15 @@ namespace MathCADActions
         }
     }
 
-    [ActionCategory("MathCad", DisplayName = "Open MathCad File")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Open MathCad File")]
     public class OpenFile : MathCadAction
     {
         public OpenFile(IDictionary<string, object> variables, ICentipedeCore core)
             : base("Open Mathcad File", variables, core)
         { }
 
+        [ActionArgument]
+        public bool Visible = true;
 
         [ActionArgument]
         public String Filename = "";
@@ -179,10 +182,11 @@ namespace MathCADActions
         {
             string fname = ParseStringForVariable(Filename);
             Worksheet = new WorkSheetWrapper(MathCad.Application.Worksheets.Open(fname));
+            MathCad.Application.Visible = Visible;
         }
     }
 
-    [ActionCategory("MathCad", DisplayName = "Save As")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Save As")]
     public class SaveAs : MathCadAction
     {
         public SaveAs(IDictionary<string, object> variables, ICentipedeCore core)
@@ -201,7 +205,7 @@ namespace MathCADActions
         }
     }
 
-    [ActionCategory("MathCad", DisplayName = "Save")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Save")]
     public class Save : MathCadAction
     {
         public Save(IDictionary<string, object> variables, ICentipedeCore core)
@@ -214,7 +218,7 @@ namespace MathCADActions
         }
     }
 
-    [ActionCategory("MathCad", DisplayName = "Close")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Close")]
     public class Close : MathCadAction
     {
         public Close(IDictionary<string, object> variables, ICentipedeCore core)
@@ -231,7 +235,7 @@ namespace MathCADActions
         }
     }
 
-    [ActionCategory("MathCad", DisplayName = "Set Value By Tag")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Set Value By Tag")]
     public class SetValueByTag : MathCadAction
     {
         public SetValueByTag(IDictionary<string, object> variables, ICentipedeCore core)
@@ -291,7 +295,7 @@ namespace MathCADActions
     }
 
 
-    [ActionCategory("MathCad", DisplayName = "Set Value By Name")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Set Value By Name")]
     public class SetValueByName : MathCadAction
     {
         public SetValueByName(IDictionary<string, object> variables, ICentipedeCore core)
@@ -341,7 +345,7 @@ namespace MathCADActions
 
     }
 
-    [ActionCategory("MathCad", DisplayName = "Get Value")]
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Get Value")]
     public class GetValue : MathCadAction
     {
         [ActionArgument]
@@ -358,6 +362,19 @@ namespace MathCADActions
         protected override void DoAction()
         {
             Variables[MathCadVarName] = Worksheet.GetValue(ParseStringForVariable(MathCadVarName));
+        }
+    }
+
+    [ActionCategory(MathCadAction.CategoryName, DisplayName = "Show MathCad")]
+    public class ShowMathCad : MathCadAction
+    {
+        public ShowMathCad(IDictionary<string, object> variables, ICentipedeCore core) :
+            base("Show Mathcad", variables, core)
+        { }
+
+        protected override void DoAction()
+        {
+            MathCad.Application.Visible = true;
         }
     }
 

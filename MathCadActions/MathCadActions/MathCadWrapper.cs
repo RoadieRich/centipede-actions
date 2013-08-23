@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using System.Xml.XPath;
 using Mathcad;
 
 namespace MathCADActions
@@ -12,12 +11,12 @@ namespace MathCADActions
 
         private MathCadWrapper()
         {
-            this._application = new Mathcad.Application();
+            this._application = new Application();
         }
 
         static readonly object _LockObject = new object();
         private volatile static MathCadWrapper _instance;
-        private Mathcad.Application _application;
+        private Application _application;
 
         public static MathCadWrapper Instance
         {
@@ -31,7 +30,6 @@ namespace MathCADActions
                         {
                             _instance = new MathCadWrapper();
                         }
-
                     }
                 }
                 return _instance;
