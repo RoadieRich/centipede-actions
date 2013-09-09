@@ -244,7 +244,9 @@ namespace OfficeActions
                 return;
             }
             WorkBook.Close();
-            WorkBook = null;
+
+            // I get an exception in PythonScope trying to set WorkBook to null, because the COM object already disconnected when we closed it
+            //WorkBook = null;
         }
     }
 
