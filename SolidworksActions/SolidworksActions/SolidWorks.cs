@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ResharperAnnotations;
-using SldWorks;
-using SwConst;
+
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 using Environment = System.Environment;
 
 namespace SolidworksActions
@@ -13,10 +14,10 @@ namespace SolidworksActions
 	{
 		private SolidWorksWrapper()
 		{
-			_app = new SldWorks.SldWorks();
+			_app = new SldWorks();
 		}
 
-		private static SldWorks.SldWorks _app;
+		private static SldWorks _app;
 		public void SelectFeature(ModelDoc2 document, string featureName, string instanceId, string itemType)
 		// ReSharper restore UnusedMember.Global
 		{
