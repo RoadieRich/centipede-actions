@@ -41,16 +41,16 @@
       <HintPath>..\..\..\Centipede\bin\Debug\CentipedeInterfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Interop.SldWorks">
-      <HintPath>.\Interop.SldWorks.dll</HintPath>
+    <Reference Include="SolidWorks.Interop.sldworks">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Interop.SwConst">
-      <HintPath>.\Interop.SwConst.dll</HintPath>
+    <Reference Include="SolidWorks.Interop.swconst">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks\api\redist\SolidWorks.Interop.swconst.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Interop.SWPublished">
-      <HintPath>.\Interop.SWPublished.dll</HintPath>
+    <Reference Include="SolidWorks.Interop.swpublished">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks\api\redist\SolidWorks.Interop.swpublished.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
