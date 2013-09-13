@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CentipedeInterfaces;
-using SldWorks;
-using SwConst;
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 using Action = Centipede.Action;
 
 namespace SolidworksActions
